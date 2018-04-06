@@ -35,6 +35,7 @@ public class Main  {
 
 
         for(int i=5; i<input.length; i++) {
+
             fileName = input[i] + ".txt";
             FileReader fr = new FileReader(fileName);             // tail [-c num|-n num] [-o file] file0 file1 file2...
             Scanner fs = new Scanner(fr);
@@ -53,11 +54,37 @@ public class Main  {
                 }
             }
 
+            ArrayList<String> list = new ArrayList<>();
+
+            while (fs.hasNextLine())
+                list.add(fs.nextLine());
+
+
+
+
+            if(c == 0) {
+                for (int k = list.size() - 1 - n; k < (list.size() - 1); k++) {
+                    fw.write("\n");
+                    fw.write(list.get(k));
+                }
+            }
+            else {
+                int k = list.size()-1;
+                while (c>list.get(k).length()) {
+                    fw.write(list.get(k));
+                    c -= list.get(k).length();
+                    k--;
+                }
+                String last = list.get(k);
+                if(c>0) {
+                    for(int l=last.length()-1-c; l<last.length(); l++) {
+                        fw.write(last.charAt(l));
+                    }
+                }
+            }
+
             fr.close();
         }
-
-
-
 
 
 
