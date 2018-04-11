@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class Main  {
+public class Tail  {
 
 
 
@@ -14,7 +14,6 @@ public class Main  {
 
 
         Scanner in = new Scanner(System.in);
-
 
 
         String line = in.nextLine();
