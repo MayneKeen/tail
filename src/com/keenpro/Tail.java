@@ -6,51 +6,50 @@ import java.util.*;
 
 public class Tail  {
 
-
-
-
-
     public static void main(String[] args) throws Exception {
+        //Scanner in = new Scanner(System.in);
+        PrintStream out = System.out;
 
-
-        Scanner in = new Scanner(System.in);
-
-
-        String line = in.nextLine();
-        String[] input = line.split(" ");
-
-
-        String ofile = input[3] + ".txt";
-        FileWriter fw = new FileWriter(ofile);
-
-
-
-        if(input[1] == "-c" && input[3] == "-n") {
-            throw new Exception("-c and -n flags r used together");
+        ArrayList<String> input = new ArrayList<>();
+        for(String element: args) {
+            input.add(element);
         }
 
-        String fileName;
+        if(input.contains("-c") && input.contains("-n")) {
+            throw new Exception("-c and -n options r used together");
+        }
+
+        if(input.contains("-o")) {
+            String ofile = input.get(input.indexOf("-o") + 1);
+            FileWriter fw = new FileWriter(ofile);
+            ArrayList<String> result = Func.action(input);
+            fw.write(result.toString());
+            fw.close();
+
+        }
+
+        else {
+            ArrayList<String> result = Func.action(input);
+            out.println(result.toString());
+        }
+
+       /* String fileName;
 
 
+        for(int i=5; i<input.size(); i++) {
 
-        for(int i=5; i<input.length; i++) {
-
-            fileName = input[i] + ".txt";
+            fileName = input.get(5);
             FileReader fr = new FileReader(fileName);             // tail [-c num|-n num] [-o file] file0 file1 file2...
             Scanner fs = new Scanner(fr);
 
             int c = 0;
             int n = 0;
 
-            switch (input[2]) {
-                case "-c": {
-                    c = Integer.parseInt(input[2]);
-                    break;
-                }
-                case "-n": {
-                    n = Integer.parseInt(input[2]);
-                    break;
-                }
+            if(input.contains("-c")) {
+                c = Integer.parseInt(input.get(input.indexOf("-c")+1));
+            }
+            else if(input.contains("-n")) {
+                n = Integer.parseInt(input.get(input.indexOf("-n")+1));
             }
 
             ArrayList<String> list = new ArrayList<>();
@@ -63,31 +62,38 @@ public class Tail  {
 
             if(c == 0) {
                 for (int k = list.size() - 1 - n; k < (list.size() - 1); k++) {
-                    fw.write("\n");
-                    fw.write(list.get(k));
+                    if(ofile!=null) {
+                        fw.write("\n");
+                        fw.write(list.get(k));
+                    }
+                    else out.println(list.get(k));
                 }
             }
             else {
                 int k = list.size()-1;
                 while (c>list.get(k).length()) {
-                    fw.write(list.get(k));
+                    if(ofile!=null) {
+                        fw.write(list.get(k));
+                        fw.write("\n");
+                    }
+                    else
+                        out.println(list.get(k));
                     c -= list.get(k).length();
                     k--;
                 }
                 String last = list.get(k);
                 if(c>0) {
                     for(int l=last.length()-1-c; l<last.length(); l++) {
-                        fw.write(last.charAt(l));
+                        if(ofile!=null)
+                            fw.write(last.charAt(l));
+                        else
+                            out.println(last.charAt(l));
                     }
                 }
             }
 
             fr.close();
-        }
-
-
-
-        fw.close();
+        } */
     }
 
 }
