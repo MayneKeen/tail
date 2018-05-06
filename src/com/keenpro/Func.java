@@ -6,61 +6,48 @@ import java.util.Scanner;
 
 public class Func {
 
-    public static ArrayList<String> action(ArrayList<String> input) throws Exception{
+    public static ArrayList<String> action(ArrayList<String> input, ArrayList<String> inputFiles,
+                                           int c, int n) throws Exception {
 
         String fileName;
         ArrayList<String> result = new ArrayList<>();
 
-        for(int i=5; i<input.size(); i++) {
+        for (String element: inputFiles) {
 
-            fileName = input.get(5);
-            FileReader fr = new FileReader(fileName);             // tail [-c num|-n num] [-o file] file0 file1 file2...
+            fileName = element;
+            FileReader fr = new FileReader(fileName);          // tail [-c num|-n num] [-o file] file0 file1 file2...
             Scanner fs = new Scanner(fr);
-
-            int c = 0;
-            int n = 0;
-
-            if(input.contains("-c")) {
-                c = Integer.parseInt(input.get(input.indexOf("-c")+1));
-            }
-            else if(input.contains("-n")) {
-                n = Integer.parseInt(input.get(input.indexOf("-n")+1));
-            }
 
             ArrayList<String> list = new ArrayList<>();
 
             while (fs.hasNextLine())
                 list.add(fs.nextLine());
 
-
-
-
-            if(c == 0) {
+            if (c == 0) {
                 for (int k = list.size() - 1 - n; k < (list.size() - 1); k++) {
-                        result.add("\n");
-                        result.add(list.get(k));
+                    result.add("\n");
+                    result.add(list.get(k));
                 }
-            }
-            else {
-                int k = list.size()-1;
-                while (c>list.get(k).length()) {
+            } else {
+                int k = list.size() - 1;
+                while (c < list.get(k).length()) {
                     result.add(list.get(k));
                     result.add("\n");
                     c -= list.get(k).length();
-                    k--;
+                    k++;
                 }
 
                 String last = list.get(k);
-                if(c>0) {
-                    for(int l=last.length()-1-c; l<last.length(); l++) {
-                       result.add(Character.toString(last.charAt(l))); //pls tell me if this line's written incorrect
-                    }                                                  //maybe it'll be better to use String.valueOf() ?
+                if (c > 0) {
+                    for (int l = last.length() - 1 - c; l < last.length(); l++) {
+                        result.add(Character.toString(last.charAt(l)));
+                    }
                 }
             }
-
             fr.close();
         }
         return result;
     }
+
 
 }
