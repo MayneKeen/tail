@@ -1,52 +1,63 @@
 package com.keenpro;
 
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Func {
 
+    public static PrintStream out = System.out;
+
     public static ArrayList<String> action(ArrayList<String> input, ArrayList<String> inputFiles,
-                                           int c, int n) throws Exception {
+                                           int c, int n) {
 
-        String fileName;
-        ArrayList<String> result = new ArrayList<>();
+        try {
 
-        for (String element: inputFiles) {
+            String fileName;
+            ArrayList<String> result = new ArrayList<>();
 
-            fileName = element;
-            FileReader fr = new FileReader(fileName);          // tail [-c num|-n num] [-o file] file0 file1 file2...
-            Scanner fs = new Scanner(fr);
+            for (String element : inputFiles) {
 
-            ArrayList<String> list = new ArrayList<>();
+                fileName = element;
+                FileReader fr = new FileReader(fileName);         // tail [-c num |-n num] [-o file] file0 file1 file2...
+                Scanner fs = new Scanner(fr);
 
-            while (fs.hasNextLine())
-                list.add(fs.nextLine());
+                ArrayList<String> list = new ArrayList<>();
 
-            if (c == 0) {
-                for (int k = list.size() - 1 - n; k < (list.size() - 1); k++) {
-                    result.add("\n");
-                    result.add(list.get(k));
-                }
-            } else {
-                int k = list.size() - 1;
-                while (c < list.get(k).length()) {
-                    result.add(list.get(k));
-                    result.add("\n");
-                    c -= list.get(k).length();
-                    k++;
-                }
+                while (fs.hasNextLine())
+                    list.add(fs.nextLine());
 
-                String last = list.get(k);
-                if (c > 0) {
-                    for (int l = last.length() - 1 - c; l < last.length(); l++) {
-                        result.add(Character.toString(last.charAt(l)));
+                if (c == 0) {
+                    for (int k = list.size() - 1 - n; k < (list.size() - 1); k++) {
+                        result.add("\n");
+                        result.add(list.get(k));
+                    }
+                } else {
+                    int k = list.size() - 1;
+                    while (c < list.get(k).length()) {
+                        result.add(list.get(k));
+                        result.add("\n");
+                        c -= list.get(k).length();
+                        k++;
+                    }
+
+                    String last = list.get(k);
+                    if (c > 0) {
+                        for (int l = last.length() - 1 - c; l < last.length(); l++) {
+                            result.add(Character.toString(last.charAt(l)));
+                        }
                     }
                 }
+                fr.close();
             }
-            fr.close();
+            return result;
         }
-        return result;
+        catch (IOException e) {
+            out.println("IOException has just been caught (FileReader)");
+            return null;
+        }
     }
 
 
