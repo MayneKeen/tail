@@ -22,9 +22,10 @@ public class Tail {
             for (int i = 0; i < args.length; i++) {
 
                 input.add(args[i]);
-                Matcher m = p.matcher(args[i]);
-                if (!m.matches() && !args[i].equals("tail") && !args.equals("-c") &&
-                        !args.equals("-n") && !args.equals("-o") && args[i - 1] != "-o")
+                //Matcher m = p.matcher(args[i]);
+                if (!(args[i].equals("-c")  && args[i - 1].equals("-c"))
+                        && !(args[i].equals("-n")  && args[i - 1].equals("-n"))
+                        && !(args[i].equals("-o") && args[i - 1].equals("-o")))
                     inputFiles.add(args[i]);
             }
 
@@ -35,13 +36,30 @@ public class Tail {
                 ofile = input.get(input.indexOf("-o") + 1);
             }
 
-            if (input.contains("-c") && input.contains("-n")) {
+
+
+            if (input.contains("-c") && input.contains("-n") ) {
                 out.print("-c and -n flags are used together");
-            } else {
+                System.exit(0);
+            }
+            else {
+
 
                 if (input.contains("-c")) {
+                    Matcher m = p.matcher(input.get(input.indexOf("-c") + 1));
+                    if(!m.matches()) {
+                        out.print("You should place a number after using -c flag");
+                        System.exit(0);
+                    }
                     c = Integer.parseInt(input.get(input.indexOf("-c") + 1));
-                } else if (input.contains("-n")) {
+                }
+
+                else if (input.contains("-n")) {
+                    Matcher m = p.matcher(input.get(input.indexOf("-n") + 1));
+                    if(!m.matches()) {
+                        out.print("You should place a number after using -n flag");
+                        System.exit(0);
+                    }
                     n = Integer.parseInt(input.get(input.indexOf("-n") + 1));
                 }
             }
@@ -49,26 +67,41 @@ public class Tail {
             if (!inputFiles.isEmpty()) {
                 if (ofile != "") {
                     FileWriter fw = new FileWriter(ofile);
-                    LinkedList<String> result = Func.action(input, inputFiles, c, n, false);
-                    for (int i = 0; i < result.size(); i++) {
-                        fw.write(result.get(i) + " ");
+                    try {
+                        LinkedList<String> result = Func.action(input, inputFiles, c, n, false);
+                        if(result == null) {
+                            out.print("No text found");
+                            System.exit(0);
+                        }
+                        for (int i = 0; i < result.size(); i++) {
+                            fw.write(result.get(i));
+                        }
+                    } catch (IOException e) {
+                        out.print("IOException has just been caught while calling action() method");
                     }
+
                     fw.close();
 
                 } else {
-                    LinkedList<String> result = Func.action(input, inputFiles, c, n, false);
-                    for (int i = 0; i < result.size(); i++) {
-                        out.println(result.get(i) + " ");
+                    try {
+                        LinkedList<String> result = Func.action(input, inputFiles, c, n, false);
+                        if(result == null) {
+                            out.print("No text found");
+                            System.exit(0);
+                        }
+                        for (int i = 0; i < result.size(); i++) {
+                            out.println(result.get(i));
+                        }
+                    } catch (IOException e) {
+                        out.print("IOException has just been caught while calling action() method");
                     }
-
                 }
 
             } else {
 
                 LinkedList<String> text = new LinkedList<>();
-                out.println("Please, enter your text here, after it please write \"-s\" in a new line");
                 String temp = in.nextLine();
-                while (temp != "-s") {
+                while (in.hasNext()) {
                     text.addLast(temp);
                     temp = in.nextLine();
                 }
@@ -76,15 +109,23 @@ public class Tail {
                 if (ofile != "") {
                     FileWriter fw = new FileWriter(ofile);
                     LinkedList<String> result = Func.consoleAction(text, c, n);
+                    if(result == null) {
+                        out.print("No text found");
+                        System.exit(0);
+                    }
                     for (int i = 0; i < result.size(); i++) {
-                        fw.write(result.get(i) + " ");
+                        fw.write(result.get(i));
                     }
                     fw.close();
 
                 } else {
                     LinkedList<String> result = Func.consoleAction(text, c, n);
+                    if(result == null) {
+                        out.print("No text found");
+                        System.exit(0);
+                    }
                     for (int i = 0; i < result.size(); i++) {
-                        out.println(result.get(i) + " ");
+                        out.println(result.get(i));
                     }
 
                 }

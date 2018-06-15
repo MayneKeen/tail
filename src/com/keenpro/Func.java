@@ -12,9 +12,8 @@ public class Func {
     public static PrintStream out = System.out;
 
     public static LinkedList<String> action(ArrayList<String> input, ArrayList<String> inputFiles,
-                                            int c, int n, boolean consoleInput) {
+                                            int c, int n, boolean consoleInput) throws Exception{
 
-        try {
 
             String fileName;
             LinkedList<String> result = new LinkedList<>();
@@ -34,39 +33,15 @@ public class Func {
 
                 if (c == 0) {
                     for (int k = list.size() - 1 - n; k < (list.size() - 1); k++) {
-                        result.add("\n");
                         result.add(list.get(k));
                     }
                 }
-
-
-                /*else {
-                    int l = list.size()-1;
-                    int a = 0;
-                    int k = 0;
-                    int i = l;
-
-                    while (c>k) {
-                        i--;
-                        a++;
-                        c-=list.get(i).length();
-                    }
-
-                    while (c>list.get(k).length();) {
-
-
-                        c-=list.get(k).length();
-                    }
-
-
-                }*/
 
 
                 else {
                     int k = list.size() - 1;
                     while (c < list.get(k).length()) {
                         result.addFirst(list.get(k));
-                        result.addFirst("\n");
                         c -= list.get(k).length();
                         k++;
                     }
@@ -81,12 +56,6 @@ public class Func {
                 fr.close();
             }
             return result;
-
-
-        } catch (IOException e) {
-            out.println("IOException has just been caught (FileReader)");
-            return null;
-        }
     }
 
 
@@ -97,14 +66,12 @@ public class Func {
 
         if (c == 0) {
             for (int k = input.size() - 1 - n; k < (input.size() - 1); k++) {
-                input.add("\n");
                 result.add(input.get(k));
             }
         } else {
             int k = input.size() - 1;
             while (c < input.get(k).length()) {
                 result.addFirst(input.get(k));
-                result.addFirst("\n");
                 c -= input.get(k).length();
                 k++;
             }
