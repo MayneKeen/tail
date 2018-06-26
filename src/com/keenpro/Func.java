@@ -12,19 +12,24 @@ class Func {
                     result.add(text.get(k));
                 }
             } else {
-                int k = text.size() - 1;
-                while (c < text.get(k).length()) {
-                    result.addFirst(text.get(k));
-                    c -= text.get(k).length();
-                    k++;
-                }
+                if(text.size() > 0) {
+                    int k = text.size() - 1;
+                    while (c >= text.get(k).length() && k > 0) {
+                        result.addFirst(text.get(k));
+                        c -= text.get(k).length();
+                        k--;
+                    }
 
-                String last = text.get(k);
-                if (c > 0) {
-                    result.addFirst(last.substring(last.length() - 1 - c));
+                    String last = text.get(k);
+                    if (c > 0) {
+                        result.addFirst(last.substring(last.length() - c));
+                    }
+                }
+                else {
+                    System.out.print("No text found");
+                    System.exit(1);
                 }
             }
-
         return result;
     }
 }

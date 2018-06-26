@@ -16,17 +16,16 @@ public class Tail {
 
             Pattern p = Pattern.compile("[0-9]+");
 
-
             List<String> input = new LinkedList<>();
             List<String> inputFiles = new ArrayList<>();
             for (int i = 0; i < args.length; i++) {
 
                 input.add(args[i]);
                 //Matcher m = p.matcher(args[i]);
-                if (!(args[i].equals("-c")  && args[i - 1].equals("-c"))
-                        && !(args[i].equals("-n")  && args[i - 1].equals("-n"))
-                        && !(args[i].equals("-o") && args[i - 1].equals("-o")))
-                    inputFiles.add(args[i]);
+                if (!args[i].equals("-c") && !args[i].equals("-n")
+                        && !args[i].equals("-o"))
+                    if(i > 1 &&!(args[i - 1].equals("-c") || args[i - 1].equals("-n") || args[i - 1].equals("-o")))
+                        inputFiles.add(args[i]);
             }
 
             int c = 0;
@@ -43,7 +42,6 @@ public class Tail {
                 System.exit(0);
             }
             else {
-
 
                 if (input.contains("-c")) {
                     Matcher m = p.matcher(input.get(input.indexOf("-c") + 1));
@@ -71,7 +69,7 @@ public class Tail {
 
                         LinkedList<String> text = new LinkedList<>();
 
-                        FileReader fr = new FileReader(element);
+                        FileReader fr = new FileReader(new File(element));
                         BufferedReader reader = new BufferedReader(fr);
                         String line;
                         while ((line = reader.readLine()) != null) {
@@ -82,7 +80,7 @@ public class Tail {
 
 
                     if (!ofile.equals("")) {
-                        FileWriter fw = new FileWriter(ofile);
+                        FileWriter fw = new FileWriter(new File(ofile));
                         try {
                             LinkedList<String> result = Func.action(text, c, n);
                             if (result == null) {
@@ -122,7 +120,7 @@ public class Tail {
                 }
 
                 if (!ofile.equals("")) {
-                    FileWriter fw = new FileWriter(ofile);
+                    FileWriter fw = new FileWriter(new File(ofile));
                     LinkedList<String> result = Func.action(text, c, n);
                     if(result == null) {
                         out.print("No text found");
