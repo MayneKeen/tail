@@ -7,8 +7,8 @@ import java.util.regex.Pattern;
 
 
 public class Tail {
-    public static Scanner in = new Scanner(System.in);
-    public static PrintStream out = System.out;
+    private static Scanner in = new Scanner(System.in);
+    private static PrintStream out = System.out;
 
 
     public static void main(String[] args) {
@@ -17,8 +17,8 @@ public class Tail {
             Pattern p = Pattern.compile("[0-9]+");
 
 
-            ArrayList<String> input = new ArrayList<>();
-            ArrayList<String> inputFiles = new ArrayList<>();
+            List<String> input = new LinkedList<>();
+            List<String> inputFiles = new ArrayList<>();
             for (int i = 0; i < args.length; i++) {
 
                 input.add(args[i]);
@@ -65,39 +65,54 @@ public class Tail {
             }
 
             if (!inputFiles.isEmpty()) {
-                if (ofile != "") {
-                    FileWriter fw = new FileWriter(ofile);
-                    try {
-                        LinkedList<String> result = Func.action(input, inputFiles, c, n, false);
-                        if(result == null) {
+                for (String element : inputFiles) {
+
+                        out.print("Filename is " + element);
+
+                        LinkedList<String> text = new LinkedList<>();
+
+                        FileReader fr = new FileReader(element);
+                        BufferedReader reader = new BufferedReader(fr);
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            text.addLast(line);
+                        }
+                        reader.close();
+
+
+
+                    if (!ofile.equals("")) {
+                        FileWriter fw = new FileWriter(ofile);
+                        try {
+                            LinkedList<String> result = Func.action(text, c, n);
+                            if (result == null) {
+                                out.print("No text found");
+                                System.exit(0);
+                            }
+                            for (String tmp : result) {
+                                fw.write(tmp);
+                            }
+                        } catch (IOException e) {
+                            out.print("IOException has just been caught (FW)");
+                        }
+
+                        fw.close();
+
+                    }
+                    else {
+                        LinkedList<String> result = Func.action(text, c, n);
+                        if (result == null) {
                             out.print("No text found");
                             System.exit(0);
                         }
-                        for (int i = 0; i < result.size(); i++) {
-                            fw.write(result.get(i));
+                        for (String tmp : result) {
+                            out.println(tmp);
                         }
-                    } catch (IOException e) {
-                        out.print("IOException has just been caught while calling action() method");
                     }
 
-                    fw.close();
-
-                } else {
-                    try {
-                        LinkedList<String> result = Func.action(input, inputFiles, c, n, false);
-                        if(result == null) {
-                            out.print("No text found");
-                            System.exit(0);
-                        }
-                        for (int i = 0; i < result.size(); i++) {
-                            out.println(result.get(i));
-                        }
-                    } catch (IOException e) {
-                        out.print("IOException has just been caught while calling action() method");
-                    }
                 }
-
-            } else {
+            }
+            else {
 
                 LinkedList<String> text = new LinkedList<>();
                 String temp = in.nextLine();
@@ -106,26 +121,26 @@ public class Tail {
                     temp = in.nextLine();
                 }
 
-                if (ofile != "") {
+                if (!ofile.equals("")) {
                     FileWriter fw = new FileWriter(ofile);
-                    LinkedList<String> result = Func.consoleAction(text, c, n);
+                    LinkedList<String> result = Func.action(text, c, n);
                     if(result == null) {
                         out.print("No text found");
                         System.exit(0);
                     }
-                    for (int i = 0; i < result.size(); i++) {
-                        fw.write(result.get(i));
+                    for (String tmp : result) {
+                        fw.write(tmp);
                     }
                     fw.close();
 
                 } else {
-                    LinkedList<String> result = Func.consoleAction(text, c, n);
+                    LinkedList<String> result = Func.action(text, c, n);
                     if(result == null) {
                         out.print("No text found");
                         System.exit(0);
                     }
-                    for (int i = 0; i < result.size(); i++) {
-                        out.println(result.get(i));
+                    for (String tmp : result) {
+                        out.println(tmp);
                     }
 
                 }
@@ -133,7 +148,8 @@ public class Tail {
         } catch (IOException e) {
             out.println("IOException has just been caught (FileWriter)");
         } catch (Exception e) {
-            out.println("The action() method did smth wrong");
+            out.println("Unexpected Exception");
+            e.printStackTrace(out);
         }
 
 
